@@ -48,21 +48,6 @@ namespace KmlTest2
             {
                 kmlFile.Save(stream);
             }
-
-
-
-         //  XmlWriterSettings settings = new XmlWriterSettings();
-         //   settings.OmitXmlDeclaration = false;
-         //   settings.Indent = true;
-         //   settings.IndentChars = "\t";
-         //   using (XmlWriter writer = XmlWriter.Create(fileName, settings))
-         //   {
-         //       writer.WriteStartDocument();
-         //       //          writer.Settings.OmitXmlDeclaration = false;
-         ////       writer.WriteEndDocument();
-         //       writer.Close();
-         //   }
-         //   ;
         }
         static void ImportPlaceMarks(string fileName)
         {
