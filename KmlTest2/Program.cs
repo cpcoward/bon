@@ -17,31 +17,39 @@ namespace KmlTest2
     {
         static void Main(string[] args)
         {
-            string importFileName = @"C:\Users\cpc1\OneDrive\Work-Skydrive\battle of normandy.kml";
+  //          string importFileName = @"C:\Users\cpc1\OneDrive\Work-Skydrive\battle of normandy.kml";
             string exportFileName = @"C:\Users\cpc1\OneDrive\Work-Skydrive\battle of normandy-test.kml";
     //        ImportPlaceMarks(importFileName);
-            exportKML(exportFileName);
+            ExportKML(exportFileName);
         }
 
-        static void exportKML(string fileName)
+        static void ExportKML(string fileName)
         {
-            List<PlaceMark> placeMarks = new List<PlaceMark>();
-
+            List<Placemark> placemarks = new List<Placemark>();
             Kml kml = new Kml();
             Document document = new Document();
-            Folder folder = new Folder();
-            folder.Name = "Document";
+            using (bonEntities db = new bonEntities())
+            {
+                foreach (Location location in db.Locations)
+                {
+                    string locationName = location.Name;
+                    string locationDescription = location.Description;
+                    float? locationLatitude = location.Latitude;
+                    float? locationLongitude = location.Longitude;
+                    float? locationAltitude = location.Altitude;
+                    SharpKml.Dom.Point point = new SharpKml.Dom.Point();
+                    point.Coordinate = new Vector((double)locationLatitude, (double)locationLongitude, (double)locationAltitude);
+                    Placemark placemark = new Placemark();
+                    placemark.Name = locationName;
+                    Description description = new Description();
+                    description.Text = locationDescription;
+                    placemark.Description = description;
+                    placemark.Geometry = point;
+                    document.AddFeature(placemark);
+                }
+            }
 
-            SharpKml.Dom.Point point = new SharpKml.Dom.Point();
-            point.Coordinate = new Vector(37.42052549, -122.0816695, 0);
-            Placemark placemark = new Placemark();
-            placemark.Name = "Test";
-            Description description = new Description();
-            description.Text = "description";
-            placemark.Description = description;
-            placemark.Geometry = point;
             kml.Feature = document;
-            document.AddFeature(placemark);
            
             KmlFile kmlFile = SharpKml.Engine.KmlFile.Create(kml, false);
             using (var stream = System.IO.File.Create(fileName))
